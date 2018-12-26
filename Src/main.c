@@ -63,7 +63,11 @@ static void MX_SPI1_Init(void);
 /* USER CODE END PFP */
 
 /* USER CODE BEGIN 0 */
-uint8_t rx_buffer[2]; //vector de 2 bytes que llevará la info de la recepción
+uint8_t tx_buffer[2]; //vector de 2 bytes que llevará la info de la transmisión
+uint8_t X_axis_rx_buffer[2]; //vector de 2 bytes que llevará la info de la recepción
+uint8_t Y_axis_rx_buffer[2]; //vector de 2 bytes que llevará la info de la recepción
+uint8_t Z_axis_rx_buffer[2]; //vector de 2 bytes que llevará la info de la recepción
+
 /* USER CODE END 0 */
 
 /**
@@ -101,26 +105,50 @@ int main(void)
 	HAL_SPI_Init(&hspi1);
 
   /* USER CODE BEGIN 2 */
-	//Se selcciona como dirección la de OUT_X_H que se corresponde con la dirección 28
-	rx_buffer[0] = 0x28;
-
+	//se activa el Chip Enable poniendo un 0 en el CS
+   HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, GPIO_PIN_RESET);
+	//se almacena la dirección donde se va mandar
+	//el primer bit es el de lectura (0), el segundo (MS) con 1 aumenta la dirección en cada lectura, y los 5 últimos son la dirección del registro 
+   tx_buffer[0] = 0x20;//dirección del registro CTRL_REG1 del giróscopo en modo escritura
+	//en l segundo byte de tx_buffer se escribe los datos que s leerán
+	 tx_buffer[1] = 0x0F;//dato a escribir en el registro que activa el PD (Power), y los tres ejes (X,Y,Z)
+	//se envía el dato almacenado en tx_buffer[1]
+   HAL_SPI_Transmit(&hspi1, tx_buffer, 2, HAL_MAX_DELAY);
+  //se desactiva el Chip Enable poniendo un 1 en el CS
+   HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, GPIO_PIN_SET);
+	
    /* USER CODE END 2 */
    while(1)
 	 {
-		//se activa el Chip Enable poniendo un 0 en el CS
-     HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, GPIO_PIN_RESET);
-		//se almacena la dirección donde se va mandar
-		//Se selcciona como dirección la de OUT_X_H que se corresponde con la dirección 28
-		rx_buffer[0] = 0x28;
-		//se recibe la infrormación almacenada previamente para comproar que funciona perfectamente
-     HAL_SPI_Receive(&hspi1, rx_buffer, 2, 50);
-		//se desactiva el Chip Enable poniendo un 1 en el CS
-     HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, GPIO_PIN_SET);
-		
-     HAL_Delay(HAL_MAX_DELAY);
+		 
+			//se activa el Chip Enable poniendo un 0 en el CS
+			 HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, GPIO_PIN_RESET);
+			//Se selcciona como dirección la de OUT_X_H que se corresponde con la dirección 29
+			X_axis_rx_buffer[0] = 0x29 | 0x80;
+			//se recibe la infrormación almacenada previamente para comproar que funciona perfectamente
+			 HAL_SPI_Receive(&hspi1, X_axis_rx_buffer, 2, 50);
+			//se desactiva el Chip Enable poniendo un 1 en el CS
+			 HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, GPIO_PIN_SET);
+			//se activa el Chip Enable poniendo un 0 en el CS
+			 HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, GPIO_PIN_RESET);
+			//Se selcciona como dirección la de OUT_X_H que se corresponde con la dirección 29
+			Y_axis_rx_buffer[0] = 0x2B | 0x80;
+			//se recibe la infrormación almacenada previamente para comproar que funciona perfectamente
+			 HAL_SPI_Receive(&hspi1, Y_axis_rx_buffer, 2, 50);
+			//se desactiva el Chip Enable poniendo un 1 en el CS
+			 HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, GPIO_PIN_SET);
+			//se activa el Chip Enable poniendo un 0 en el CS
+			 HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, GPIO_PIN_RESET);
+			//Se selcciona como dirección la de OUT_X_H que se corresponde con la dirección 29
+			Z_axis_rx_buffer[0] = 0x2C | 0x80;
+			//se recibe la infrormación almacenada previamente para comproar que funciona perfectamente
+			 HAL_SPI_Receive(&hspi1, Z_axis_rx_buffer, 2, 50);
+			//se desactiva el Chip Enable poniendo un 1 en el CS
+			 HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, GPIO_PIN_SET);
+			
+			 HAL_Delay(50);
    }
-}
-
+ }
 /**
   * @brief System Clock Configuration
   * @retval None
