@@ -108,28 +108,25 @@ int main(void)
 	//el primer bit es el de lectura (0), el segundo (MS) con 1 aumenta la dirección en cada lectura, y los 5 últimos son la dirección del registro 
    tx_buffer[0] = 0x20;//dirección del registro CTRL_REG1 del giróscopo en modo escritura
 	//en l segundo byte de tx_buffer se escribe los datos que s leerán
-	 tx_buffer[1] = 0xAF;//dato a escribir en el registro
+	 tx_buffer[1] = 0x0F;//dato a escribir en el registro
 	//se envía el dato almacenado en tx_buffer[1]
-   HAL_SPI_Transmit(&hspi1, tx_buffer, 2, HAL_MAX_DELAY);
+   HAL_SPI_Transmit(&hspi1, tx_buffer, 2, 50);
   //se desactiva el Chip Enable poniendo un 1 en el CS
    HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, GPIO_PIN_SET);
 
    /* USER CODE END 2 */
-
    while(1)
-
-   {
-			//se activa el Chip Enable poniendo un 0 en el CS
-      HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, GPIO_PIN_RESET);
-			//se almacena la dirección donde se va mandar
-      rx_buffer[0] = 0x28 | 0x80;//dirección del registro CTRL_REG1 del giróscopo en modo lectura
-			//se recibe la infrormación almacenada previamente para comproar que funciona perfectamente
-      HAL_SPI_Receive(&hspi1, rx_buffer, 1, HAL_MAX_DELAY);
-			//se desactiva el Chip Enable poniendo un 1 en el CS
-      HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, GPIO_PIN_SET);
-			
-      HAL_Delay(HAL_MAX_DELAY);
-
+	 {
+		//se activa el Chip Enable poniendo un 0 en el CS
+     HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, GPIO_PIN_RESET);
+		//se almacena la dirección donde se va mandar
+     rx_buffer[0] = tx_buffer[0] | 0x80;//dirección del registro CTRL_REG1 del giróscopo en modo lectura
+		//se recibe la infrormación almacenada previamente para comproar que funciona perfectamente
+     HAL_SPI_Receive(&hspi1, rx_buffer, 2, 50);
+		//se desactiva el Chip Enable poniendo un 1 en el CS
+     HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, GPIO_PIN_SET);
+		
+     HAL_Delay(HAL_MAX_DELAY);
    }
 }
 
