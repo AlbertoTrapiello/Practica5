@@ -129,22 +129,7 @@ int main(void)
 			 HAL_SPI_Receive(&hspi1, X_axis_rx_buffer, 2, 50);
 			//se desactiva el Chip Enable poniendo un 1 en el CS
 			 HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, GPIO_PIN_SET);
-			//se activa el Chip Enable poniendo un 0 en el CS
-			 HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, GPIO_PIN_RESET);
-			//Se selcciona como dirección la de OUT_X_H que se corresponde con la dirección 29
-			Y_axis_rx_buffer[0] = 0x2B | 0x80;
-			//se recibe la infrormación almacenada previamente para comproar que funciona perfectamente
-			 HAL_SPI_Receive(&hspi1, Y_axis_rx_buffer, 2, 50);
-			//se desactiva el Chip Enable poniendo un 1 en el CS
-			 HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, GPIO_PIN_SET);
-			//se activa el Chip Enable poniendo un 0 en el CS
-			 HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, GPIO_PIN_RESET);
-			//Se selcciona como dirección la de OUT_X_H que se corresponde con la dirección 29
-			Z_axis_rx_buffer[0] = 0x2C | 0x80;
-			//se recibe la infrormación almacenada previamente para comproar que funciona perfectamente
-			 HAL_SPI_Receive(&hspi1, Z_axis_rx_buffer, 2, 50);
-			//se desactiva el Chip Enable poniendo un 1 en el CS
-			 HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, GPIO_PIN_SET);
+
 			
 			 HAL_Delay(50);
    }
