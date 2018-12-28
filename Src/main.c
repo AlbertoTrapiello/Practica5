@@ -113,7 +113,7 @@ int main(void)
   MX_GPIO_Init();
   MX_ADC1_Init();
   /* USER CODE BEGIN 2 */
-
+	int umbral = 100;
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -127,7 +127,10 @@ int main(void)
 			ADC_val=HAL_ADC_GetValue(&hadc1);
 		}
 		HAL_ADC_Stop(&hadc1);
-
+		if(ADC_val < umbral)
+		{
+			HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12, GPIO_PIN_SET);
+		}
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
