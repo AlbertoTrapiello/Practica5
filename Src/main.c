@@ -127,6 +127,7 @@ int main(void)
 			ADC_val=HAL_ADC_GetValue(&hadc1);
 		}
 		HAL_ADC_Stop(&hadc1);
+
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
