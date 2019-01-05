@@ -105,8 +105,8 @@ int main(void)
 	//se activa el Chip Enable poniendo un 0 en el CS
    HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, GPIO_PIN_RESET);
 	//se almacena la dirección donde se va mandar
-	//el primer bit es el de lectura (0), el segundo (MS) con 1 aumenta la dirección en cada lectura, y los 5 últimos son la dirección del registro 
-   tx_buffer[0] = 0x20;//dirección del registro CTRL_REG1 del giróscopo en modo escritura
+	//el primer bit es el de lectura (1), el segundo (MS) con 1 aumenta la dirección en cada lectura, y los 5 últimos son la dirección del registro 
+   tx_buffer[0] = 0x20;//dirección del registro CTRL_REG1 del giróscopo en modo escritura 0b00100000
 	//en l segundo byte de tx_buffer se escribe los datos que s leerán
 	 tx_buffer[1] = 0x0F;//dato a escribir en el registro
 	//se envía el dato almacenado en tx_buffer[1]
